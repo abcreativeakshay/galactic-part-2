@@ -1,0 +1,125 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dracarys</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              cyber: {
+                950: '#030508', 
+                900: '#080c14',
+                800: '#0f1623',
+                700: '#182133',
+                accent: '#00f0ff', // Electric Cyan
+                secondary: '#7000ff', // Deep Violet
+                glass: 'rgba(255, 255, 255, 0.03)',
+                border: 'rgba(255, 255, 255, 0.08)',
+              }
+            },
+            fontFamily: {
+              mono: ['"Fira Code"', 'monospace'], 
+              sans: ['"Inter"', 'system-ui', 'sans-serif'],
+              display: ['"Rajdhani"', 'sans-serif']
+            },
+            animation: {
+              'fade-in': 'fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+              'float': 'float 6s ease-in-out infinite',
+              'pulse-glow': 'pulseGlow 3s ease-in-out infinite',
+              'slide-up': 'slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+              'spin-slow': 'spin 12s linear infinite',
+            },
+            keyframes: {
+              fadeIn: { '0%': { opacity: '0', transform: 'scale(0.95)' }, '100%': { opacity: '1', transform: 'scale(1)' } },
+              slideUp: { '0%': { transform: 'translateY(40px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } },
+              float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
+              pulseGlow: { '0%, 100%': { opacity: '0.5' }, '50%': { opacity: '1' } }
+            },
+            backgroundImage: {
+              'grid-pattern': "linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px)"
+            }
+          }
+        }
+      }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500&family=Inter:wght@300;400;500;600&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+      body { margin: 0; overflow: hidden; background-color: #030508; color: #e2e8f0; font-family: 'Inter', sans-serif; }
+      
+      /* Cinematic Background */
+      .bg-cinematic {
+        position: fixed; inset: 0; z-index: -2;
+        background: radial-gradient(circle at 50% -20%, #1a233a 0%, #030508 60%);
+      }
+      .bg-grid {
+        position: fixed; inset: 0; z-index: -1;
+        background-size: 40px 40px;
+        background-image: linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+        mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+      }
+
+      /* Premium Glassmorphism */
+      .glass-panel-pro {
+        background: rgba(13, 18, 30, 0.65);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 
+          0 4px 24px -1px rgba(0, 0, 0, 0.3),
+          0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+      }
+      
+      .glass-dock {
+        background: rgba(8, 12, 20, 0.8);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
+      }
+
+      /* Scrollbar */
+      ::-webkit-scrollbar { width: 4px; height: 4px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+      ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+      /* Utilities */
+      .text-glow { text-shadow: 0 0 20px rgba(0, 240, 255, 0.4); }
+      .perspective-1000 { perspective: 1000px; }
+      .preserve-3d { transform-style: preserve-3d; }
+      
+      .holo-gradient {
+        background: linear-gradient(135deg, rgba(0,240,255,0.1) 0%, rgba(112,0,255,0.1) 100%);
+      }
+
+      /* Card Hover Effect */
+      .hover-card-trigger:hover .card-content {
+        transform: translateY(-5px) scale(1.02);
+        border-color: rgba(0, 240, 255, 0.3);
+        box-shadow: 0 15px 30px -10px rgba(0, 240, 255, 0.15);
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.33.0",
+    "three": "https://esm.sh/three@^0.182.0",
+    "three/": "https://esm.sh/three@^0.182.0/",
+    "lucide-react": "https://esm.sh/lucide-react@^0.561.0"
+  }
+}
+</script>
+</head>
+  <body>
+    <div class="bg-cinematic"></div>
+    <div class="bg-grid"></div>
+    <div id="root"></div>
+  </body>
+</html>

@@ -1,0 +1,5 @@
+{
+  "name": "Dracarys",
+  "description": "Enterprise-grade 3D visualization platform for All ML Models (Neural Networks, Clustering, SVM, RL, etc.), powered by Three.js and Gemini.",
+  "requestFramePermissions": []
+}
