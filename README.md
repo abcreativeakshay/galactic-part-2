@@ -1,115 +1,236 @@
-Software Requirements Specification (SRS)
-Project: Dracarys
-Version: 1.0
-Date: [Current Date]
-1. Introduction
-1.1 Purpose
-This document provides a detailed specification for the Dracarys project. Dracarys is a web-based, enterprise-grade 3D visualization platform designed for a wide array of Machine Learning (ML) models. It leverages Three.js for high-fidelity 3D rendering and the Google Gemini API to provide AI-powered insights, configuration generation, and code synthesis.
-1.2 Scope
-The platform is an interactive, educational, and analytical tool for ML practitioners, data scientists, students, and researchers. Its scope covers:
-Model Browsing: A comprehensive library of pre-defined ML model architectures.
-AI-Powered Architecture Generation: Creation of model visualization configurations from natural language text prompts.
-Interactive 3D Visualization: Real-time, three-dimensional rendering of various ML concepts, including neural network topologies, clustering algorithms, decision boundaries, and loss landscapes.
-Model & Visual Customization: In-depth control panels for modifying both ML model parameters and visual aesthetics.
-AI-Assisted Analysis: An integrated Gemini-powered chat assistant for explaining concepts, generating algorithm steps, and producing boilerplate code.
-Exporting: The ability to export visualizations as static images or 3D models.
-1.3 Definitions, Acronyms, and Abbreviations
-AI: Artificial Intelligence
-ML: Machine Learning
-UI: User Interface
-UX: User Experience
-WebGL: Web Graphics Library
-Three.js: A cross-browser JavaScript library/API used to create and display animated 3D computer graphics in a web browser.
-Gemini API: Google's family of generative AI models.
-SRS: Software Requirements Specification
-GLB/GLTF: GL Transmission Format; a standard file format for 3D scenes and models.
-NN: Neural Network
-SVM: Support Vector Machine
-PCA: Principal Component Analysis
-LLM: Large Language Model
-2. Overall Description
-2.1 Product Perspective
-Dracarys is a standalone, client-side web application that runs entirely in the user's browser. It is dependent on a modern browser with WebGL support for its rendering capabilities and requires a valid Google Gemini API key (provided via an environment variable process.env.API_KEY) for its intelligent features.
-2.2 Product Functions
-The major functions of the Dracarys platform are:
-Home Dashboard: Serves as the main entry point, providing access to the model library and AI-powered search.
-Model Library: A categorized, searchable collection of common ML models that can be loaded into the visualization studio.
-3D Visualization Studio: The core interactive environment where users can view and manipulate the 3D representation of the selected ML model.
-Configuration Panels: A set of context-aware UI panels for fine-tuning model architecture, hyperparameters, and visual settings.
-AI Assistant: An integrated chat interface that provides contextual help and generates relevant artifacts (code, explanations).
-Export Module: Enables users to save their work as PNG images or GLB 3D models.
-2.3 User Characteristics
-The intended users of this platform include:
-Machine Learning Engineers & Data Scientists: For analyzing, debugging, and presenting model architectures.
-Students & Educators: As an interactive learning tool to understand complex ML concepts visually.
-Researchers: To explore novel architectures and visualize high-dimensional data.
-AI Enthusiasts: For general exploration and learning.
-Users are expected to have a basic understanding of Machine Learning concepts.
-2.4 Constraints
-The application must run in a modern web browser with WebGL enabled.
-Performance is dependent on the client's GPU capabilities.
-All AI features are contingent on a valid and accessible Google Gemini API key.
-The application is client-side only; no user data or configurations are persisted on a server.
-Visualizations of extremely large models (e.g., billions of parameters) are simplified for performance.
-2.5 Assumptions and Dependencies
-The process.env.API_KEY environment variable is correctly configured and available at runtime.
-The user has a stable internet connection for initial asset loading and for making API calls to the Gemini service.
-The client-side environment has sufficient memory and processing power for smooth 3D rendering.
-3. Specific Requirements
-3.1 Functional Requirements
-FR-1.1: Boot Sequence: The application shall display an animated loading screen upon initial startup.
-FR-1.2: Home View: The default view shall be the "HOME" dashboard, featuring a hero section, the Dracarys logo, and the model selection interface.
-FR-1.3: Studio View: Upon selecting or generating a model, the view shall transition to the "STUDIO" interface, which contains the 3D canvas and all related controls.
-FR-1.4: Terms of Service: The application shall provide a modal displaying the terms of service, which the user must acknowledge.
-FR-1.5: Toast Notifications: The system shall display temporary, non-blocking toast notifications for events like loading models, successful exports, or errors.
-FR-2.1: Model Categories: The Home View shall display ML models grouped into logical categories (e.g., Generative AI, Computer Vision, Deep Learning).
-FR-2.2: Model Selection: Users shall be able to select a specific model from a category to load its preset configuration into the Studio View.
-FR-2.3: AI-Powered Model Search: The Home View shall feature a search input. When a user enters a model name (e.g., "ResNet-50") and submits, the system shall:
-FR-2.3.1: Call the Gemini API (generateConfigFromModelName) with the user's query.
-FR-2.3.2: Receive a generated MLModelConfig JSON object.
-FR-2.3.3: Load the received configuration and transition to the Studio View.
-FR-3.1: 3D Scene Rendering: The system shall render a 3D scene using Three.js, including a grid, starfield background, and appropriate lighting.
-FR-3.2: Visualization Modes: The system must support rendering for different StudioMode configurations:
-FR-3.2.1: Neural Architecture (NEURAL_ARCH): Visualize layers as arrangements of nodes (spheres/cubes) connected by lines. Shall differentiate between layer types (Dense, Conv2D, etc.).
-FR-3.2.2: Other Modes: The system has stubs and types for other modes like CLUSTERING, LOSS_LANDSCAPE, etc., which would be rendered by generating appropriate data points, surfaces, or structures. (Note: Current ThreeScene implementation focuses primarily on NEURAL_ARCH).
-FR-3.3: Scene Interaction: Users shall be able to rotate (orbit), pan, and zoom the 3D camera using mouse controls.
-FR-3.4: Hover Effects: Hovering the mouse over an interactive element in the scene (e.g., a neuron) shall trigger a visual highlight.
-FR-3.5: Animation: The system shall support real-time animations, such as "signal" particles flowing along connections in a neural network.
-FR-3.6: Animation Controls: A persistent control dock shall provide buttons to Play, Pause, and Reset the visualization's animation and state (e.g., epoch counter).
-FR-4.1: Control Dock: A central dock at the bottom of the Studio View shall provide access to various tool panels.
-FR-4.2: Model Configuration Panel: This panel shall allow users to modify the parameters of the current MLModelConfig.
-FR-4.2.1: Layer Management: For neural networks, users can add new layers, remove existing layers, and modify parameters for each layer (e.g., type, neuron count).
-FR-4.2.2: Hyperparameter Tuning: Users can adjust global parameters like Learning Rate and Dropout Rate via sliders.
-FR-4.3: Visual Settings Panel: This panel shall allow users to modify VisualSettings.
-FR-4.3.1: Adjust visual parameters like Glow Intensity and Particle Density using sliders.
-FR-4.3.2: Toggle boolean settings like Wireframe Mode.
-FR-5.1: Algorithm Trace: The Studio View shall display a "Trace" window.
-FR-5.1.1: Upon loading a model, the system shall call the Gemini API (generateSteps) to generate a list of procedural steps explaining the algorithm.
-FR-5.1.2: These steps shall be displayed in the Trace window.
-FR-5.2: Code Generation: The "Code" panel shall generate source code based on the current MLModelConfig.
-FR-5.2.1: The user can select between PyTorch and TensorFlow as the target framework.
-FR-5.2.2: The system shall generate and display corresponding boilerplate model definition code.
-FR-5.3: AI Chat Assistant: The Studio View shall include a "Chat" window.
-FR-5.3.1: Users can send text-based messages to an AI assistant.
-FR-5.3.2: The system shall call the Gemini Chat API (chatWithExpert), maintaining conversation history, and display the model's response.
-FR-6.1: Telemetry: The Studio View shall display a "Telemetry" window with simulated real-time metrics.
-FR-6.1.1: It shall display evolving line graphs for key metrics (e.g., Loss, Accuracy).
-FR-6.1.2: It shall display derived metrics (e.g., Precision, Recall).
-FR-6.2: Export Panel: An "Export" panel shall provide options to save artifacts.
-FR-6.2.1: PNG Snapshot: Users can export the current canvas view as a PNG image file.
-FR-6.2.2: 3D Model Export: Users can export the current 3D scene geometry as a binary GLTF (.glb) file.
-3.2 Non-Functional Requirements
-NFR-1: Performance
-NFR-1.1: Rendering Frame Rate: The 3D visualization shall target a rendering speed of 60 frames per second (FPS) on supported hardware.
-NFR-1.2: UI Responsiveness: All UI elements (buttons, sliders, panels) must respond to user input in under 100ms.
-NFR-1.3: API Latency: Gemini API calls should be handled asynchronously with clear loading indicators to the user.
-NFR-2: Usability
-NFR-2.1: Intuitiveness: The UI should be intuitive, with clear labels, icons, and tooltips to guide the user.
-NFR-2.2: Consistency: The visual design and interaction patterns shall be consistent across the Home and Studio views.
-NFR-3: Reliability
-NFR-3.1: Error Handling: The application must gracefully handle potential Gemini API errors (e.g., network issues, invalid requests) and display an informative error message to the user via a toast notification.
-NFR-3.2: Stability: The application should not crash or freeze the browser during normal operation, even with complex scenes or long-running animations.
-NFR-4: Aesthetics
-NFR-4.1: Visual Theme: The application must maintain a consistent, high-fidelity "cyberpunk" aesthetic, characterized by dark backgrounds, neon accents (cyan, violet), and glassmorphism effects.
-NFR-4.2: Typography: The application shall use the specified font families (Rajdhani, Inter, Fira Code) to maintain its visual identity.
-NFR-4.3: Animations: All UI transitions and animations shall be smooth and adhere to the defined animation keyframes (e.g., fadeIn, slideUp).
+# Dracarys: Enterprise-Grade 3D ML Visualization Platform
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Three.js](https://img.shields.io/badge/Three.js-3D%20Rendering-black)](https://threejs.org/)
+[![Gemini API](https://img.shields.io/badge/Google-Gemini%20API-blue)](https://ai.google.dev/)
+
+## 🌟 Overview
+
+Dracarys is a cutting-edge, web-based 3D visualization platform designed for Machine Learning practitioners, researchers, and educators. By combining Three.js for high-fidelity 3D rendering with Google's Gemini API for AI-powered insights, Dracarys transforms complex ML concepts into interactive, visually stunning experiences.
+
+**Experience ML like never before** - from neural network architectures to clustering algorithms, all visualized in real-time 3D.
+
+## ✨ Key Features
+
+### 🏠 **Intelligent Model Discovery**
+- **Categorized Model Library**: Browse pre-defined ML architectures (Generative AI, Computer Vision, Deep Learning)
+- **AI-Powered Search**: Describe a model in natural language, and Dracarys generates the visualization configuration
+- **Quick Start**: One-click loading of popular architectures (ResNet, GPT, VAE, etc.)
+
+### 🎮 **Interactive 3D Visualization Studio**
+- **Real-time 3D Rendering**: Powered by Three.js with WebGL acceleration
+- **Multiple Visualization Modes**:
+  - Neural Architecture (nodes & connections)
+  - Clustering algorithms
+  - Decision boundaries
+  - Loss landscapes
+- **Full Scene Control**: Rotate, pan, and zoom with intuitive mouse controls
+- **Animated Learning**: Watch "signal" particles flow through neural networks
+
+### ⚙️ **Comprehensive Configuration**
+- **Model Parameter Tuning**: Modify layer architectures, hyperparameters, and training settings
+- **Visual Customization**: Adjust glow effects, particle density, wireframe modes, and color schemes
+- **Cyberpunk Aesthetic**: Immersive dark theme with neon accents and glassmorphism effects
+
+### 🤖 **AI-Assisted Workflow**
+- **Gemini-Powered Chat Assistant**: Get explanations, debug concepts, and ask questions
+- **Algorithm Trace**: Step-by-step breakdown of ML algorithms
+- **Code Generation**: Generate boilerplate code in PyTorch or TensorFlow
+- **Contextual Insights**: AI understands your current visualization for relevant help
+
+### 📊 **Analytics & Export**
+- **Real-time Telemetry**: Live metrics dashboard with loss/accuracy graphs
+- **Export Capabilities**:
+  - High-resolution PNG snapshots
+  - 3D model export (GLB/GLTF format)
+  - Shareable configurations
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Modern web browser with WebGL 2.0 support
+- Google Gemini API key ([Get one here](https://ai.google.dev/))
+- Node.js 18+ (for local development)
+
+### Installation
+
+1. **Clone the repository**
+```bash
+git clone https://github.com/yourusername/dracarys.git
+cd dracarys
+```
+
+2. **Install dependencies**
+```bash
+npm install
+```
+
+3. **Configure environment**
+```bash
+cp .env.example .env.local
+# Edit .env.local and add your Gemini API key
+```
+
+4. **Start development server**
+```bash
+npm run dev
+```
+
+5. **Open your browser**
+Navigate to `http://localhost:3000`
+
+## 📖 User Guide
+
+### Getting Started
+1. **Accept Terms**: First-time users must acknowledge the Terms of Service
+2. **Home Dashboard**: Browse model categories or use the AI search
+3. **Select a Model**: Click any model card or search for a custom architecture
+4. **Enter Studio**: The 3D visualization loads automatically
+
+### Studio Interface Tour
+- **Center**: 3D canvas with interactive visualization
+- **Bottom Dock**: Access all control panels (Model, Visual, Code, Chat, Export)
+- **Left Sidebar**: Algorithm trace and telemetry
+- **Top Right**: Animation controls (Play/Pause/Reset)
+
+### Using AI Features
+1. **Search for Models**: Type natural language descriptions in the home search bar
+2. **Ask the Assistant**: Use the chat panel for explanations and help
+3. **Generate Code**: Switch to Code panel and select your framework
+4. **Get Algorithm Steps**: View the generated trace in the sidebar
+
+### Customizing Visualizations
+1. **Model Panel**: Add/remove layers, adjust hyperparameters
+2. **Visual Panel**: Toggle effects, adjust colors, modify particle systems
+3. **Real-time Updates**: All changes reflect immediately in the 3D view
+
+## 🏗️ Architecture
+
+```
+Dracarys/
+├── src/
+│   ├── components/     # React components
+│   │   ├── Home/       # Landing page components
+│   │   ├── Studio/     # 3D visualization components
+│   │   └── UI/         # Reusable UI elements
+│   ├── lib/
+│   │   ├── threejs/    # Three.js scene management
+│   │   ├── gemini/     # Gemini API integration
+│   │   └── utils/      # Utility functions
+│   ├── types/          # TypeScript definitions
+│   └── styles/         # Global styles and themes
+├── public/             # Static assets
+└── config/             # Build configurations
+```
+
+### Tech Stack
+- **Frontend**: React 18, TypeScript, Vite
+- **3D Engine**: Three.js, @react-three/fiber
+- **AI Integration**: Google Gemini API
+- **Styling**: Tailwind CSS, Framer Motion
+- **State Management**: Zustand
+- **Build Tool**: Vite
+
+## 🔧 Configuration
+
+### Environment Variables
+```env
+VITE_GEMINI_API_KEY=your_gemini_api_key_here
+VITE_APP_ENV=development
+VITE_MAX_MODEL_SIZE=1000
+```
+
+### Model Configuration Format
+```json
+{
+  "name": "ResNet-50",
+  "type": "NEURAL_ARCH",
+  "layers": [
+    {
+      "type": "Conv2D",
+      "units": 64,
+      "activation": "ReLU"
+    }
+  ],
+  "hyperparameters": {
+    "learningRate": 0.001,
+    "dropout": 0.5
+  }
+}
+```
+
+## 📱 Supported Browsers
+
+- Chrome 90+ (recommended)
+- Firefox 88+
+- Safari 15+
+- Edge 90+
+
+**Note**: WebGL 2.0 is required for optimal performance.
+
+## 🎯 Performance Targets
+
+- **Rendering**: 60 FPS on supported hardware
+- **UI Response**: <100ms for all interactions
+- **API Calls**: Async with loading indicators
+- **Model Limits**: Simplified visualization for models >1B parameters
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+### Development Guidelines
+- Write TypeScript with strict type checking
+- Follow the existing code style (ESLint/Prettier configured)
+- Add tests for new features
+- Update documentation as needed
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- [Three.js](https://threejs.org/) for incredible 3D graphics capabilities
+- [Google Gemini](https://ai.google.dev/) for AI/ML intelligence
+- React Three Fiber community for excellent examples and support
+- All contributors and users of Dracarys
+
+## 📞 Support
+
+- **Documentation**: [Full documentation available here](docs/)
+- **Issues**: [GitHub Issues](https://github.com/yourusername/dracarys/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/yourusername/dracarys/discussions)
+- **Email**: support@dracarys-ml.com
+
+## 🚧 Roadmap
+
+### Phase 1 (Current)
+- [x] Core 3D visualization engine
+- [x] Basic model library
+- [x] Gemini API integration
+- [x] Export functionality
+
+### Phase 2 (Next)
+- [ ] Collaborative visualization sessions
+- [ ] Plugin system for custom visualizers
+- [ ] Dataset visualization tools
+- [ ] Mobile-responsive design
+
+### Phase 3 (Future)
+- [ ] Real-time training visualization
+- [ ] AR/VR support
+- [ ] Cloud save and sharing
+- [ ] Advanced analytics dashboard
+
+---
+
+**Dracarys** - Where Machine Learning Meets Visual Artistry. Ignite your understanding.
+
+*"A mind needs books as a sword needs a whetstone." - And now, ML needs visualization.*
